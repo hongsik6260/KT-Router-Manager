@@ -18,8 +18,11 @@ jobs:
           gradle-version: '8.9'
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
+      - name: Rename APK with version
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/KT_Router_Manager_v6.apk
       - uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: KT_Router_Manager_APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: KT_Router_Manager_v6
+          path: app/build/outputs/apk/debug/KT_Router_Manager_v6.apk
