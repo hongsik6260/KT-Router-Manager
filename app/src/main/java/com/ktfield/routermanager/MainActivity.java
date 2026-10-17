@@ -1,6 +1,11 @@
 package com.ktfield.routermanager;
 
 import android.app.Activity;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.view.ViewGroup;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -21,10 +26,13 @@ public class MainActivity extends Activity {
     LinearLayout root;
     TextView output;
     EditText ipInput;
+    WebView browser;
+    ScrollView homeScreen;
     final int green = Color.rgb(21, 105, 78);
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         ScrollView scroll = new ScrollView(this);
+        homeScreen = scroll;
         root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(28,32,28,32);
@@ -33,7 +41,7 @@ public class MainActivity extends Activity {
         setContentView(scroll);
         TextView title = new TextView(this);
         title.setText("KT 공유기 매니저");
-        title.setTextSize(27);
+        title.setTextSize(23);
         title.setTextColor(green);
         title.setTypeface(null,Typeface.BOLD);
         root.addView(title);
@@ -100,8 +108,43 @@ public class MainActivity extends Activity {
         }
         for(String s:host.split("\\."))
             if(Integer.parseInt(s)>255) {output.setText("IP 주소 범위가 잘못되었습니다.");return;}
-        startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("http://"+host+":"+port+"/")));
-        output.setText("관리자 페이지를 열었습니다. 아이디·비밀번호·보안문자는 브라우저에서 직접 입력하세요.");
+        showRouterWebView("http://"+host+":"+port+"/");
+    }
+    void showRouterWebView(String url) {
+        LinearLayout page = new LinearLayout(this);
+        page.setOrientation(LinearLayout.VERTICAL);
+        page.setBackgroundColor(Color.WHITE);
+        Button back = new Button(this);
+        back.setText("← 앱 홈으로");
+        back.setAllCaps(false);
+        back.setOnClickListener(v -> closeRouterWebView());
+        page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
+        browser = new WebView(this);
+        browser.setWebViewClient(new WebViewClient());
+        browser.setWebChromeClient(new WebChromeClient());
+        WebSettings settings = browser.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setDisplayZoomControls(false);
+        page.addView(browser, new LinearLayout.LayoutParams(-1,0,1));
+        setContentView(page);
+        browser.loadUrl(url);
+    }
+    void closeRouterWebView() {
+        if(browser != null) {
+            browser.stopLoading();
+            browser.destroy();
+            browser = null;
+        }
+        setContentView(homeScreen);
+    }
+    @Override public void onBackPressed() {
+        if(browser != null) {
+            if(browser.canGoBack()) browser.goBack();
+            else closeRouterWebView();
+        } else super.onBackPressed();
     }
     void showBand(String band) {
         output.setText(band+" 설정 안내\n1. 관리자 로그인(보안문자 포함)\n2. 무선랜 설정에서 해당 주파수 선택\n3. 활성/비활성, Wi-Fi 이름, 비밀번호 및 WPA 모드 설정\n4. 적용 후 Wi-Fi 재연결 및 필요시 관리자 재로그인\n\n주의: 이 버전은 설정 화면으로 안내하며 공유기 값을 직접 변경하지 않습니다.");
