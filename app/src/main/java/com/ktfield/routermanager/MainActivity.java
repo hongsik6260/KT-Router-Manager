@@ -164,7 +164,7 @@ public class MainActivity extends Activity {
             return insets;
         });
         Button back = new Button(this);
-        back.setText("v13 · 앱 홈으로");
+        back.setText("v14 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
