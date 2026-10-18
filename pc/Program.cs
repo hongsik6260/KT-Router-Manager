@@ -6,15 +6,37 @@ internal sealed class RouterForm:Form{
  const string Router="http://172.30.1.254:8899/";
  record Account(string User,string Pass);
  public RouterForm(){
- Text="KT 공유기 매니저 PC";Width=1120;Height=840;StartPosition=FormStartPosition.CenterScreen;
- var top=new FlowLayoutPanel{Dock=DockStyle.Top,Height=70,BackColor=Color.FromArgb(12,111,76),Padding=new Padding(8)};
- void B(string title,Action action){var b=new Button{Text=title,AutoSize=true,Height=42,BackColor=Color.White};b.Click+=(_,_)=>action();top.Controls.Add(b);}
- B("공유기 접속",()=>web.CoreWebView2?.Navigate(Router));
- B("초기 관리자 저장",()=>Save(1));B("변경 관리자 저장",()=>Save(2));
- B("초기 관리자 입력",()=>Fill(1));B("변경 관리자 입력",()=>Fill(2));
- B("계정 변경 5칸 입력",FillChange);B("새로고침",()=>web.CoreWebView2?.Reload());
- var footer=new Label{Text="KT service남부  |  KT 공유기 매니저 PC v1.0  |  충청본부 대전지점 대전지사 CS4팀(금산) 김홍식",Dock=DockStyle.Bottom,Height=36,TextAlign=ContentAlignment.MiddleCenter};
- Controls.Add(web);Controls.Add(footer);Controls.Add(top);
+ Text="KT 공유기 매니저 PC";Width=1240;Height=940;MinimumSize=new Size(850,700);StartPosition=FormStartPosition.CenterScreen;
+ BackColor=Color.FromArgb(248,251,249);
+ var green=Color.FromArgb(0,128,77);
+ var header=new Panel{Dock=DockStyle.Top,Height=108,BackColor=green};
+ var logo=new Label{Text="kt service남부",ForeColor=Color.White,Font=new Font("Malgun Gothic",24,FontStyle.Bold),Location=new Point(25,18),AutoSize=true};
+ var title=new Label{Text="KT 공유기 매니저",ForeColor=Color.White,Font=new Font("Malgun Gothic",23,FontStyle.Bold),Location=new Point(390,13),AutoSize=true};
+ var subtitle=new Label{Text="GiGA WiFi home",ForeColor=Color.White,Font=new Font("Malgun Gothic",12),Location=new Point(394,61),AutoSize=true};
+ header.Controls.AddRange(new Control[]{logo,title,subtitle});
+ var dashboard=new TableLayoutPanel{Dock=DockStyle.Top,Height=360,ColumnCount=2,RowCount=2,Padding=new Padding(14,12,14,8)};
+ dashboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));dashboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));
+ dashboard.RowStyles.Add(new RowStyle(SizeType.Absolute,205));dashboard.RowStyles.Add(new RowStyle(SizeType.Percent,100));
+ Panel AccountPanel(int n,string label,Color color){
+ var p=new Panel{Dock=DockStyle.Fill,BackColor=Color.FromArgb(240,248,246),Margin=new Padding(6),Padding=new Padding(14)};
+ var h=new Label{Text=label,ForeColor=color,Font=new Font("Malgun Gothic",16,FontStyle.Bold),Dock=DockStyle.Top,Height=42};
+ var info=new Label{Text="아이디와 비밀번호는 암호화 저장됩니다.",Dock=DockStyle.Top,Height=34,Font=new Font("Malgun Gothic",10)};
+ var actions=new FlowLayoutPanel{Dock=DockStyle.Fill,FlowDirection=FlowDirection.LeftToRight,WrapContents=true};
+ void Btn(string txt,Action act){var b=new Button{Text=txt,Width=205,Height=48,BackColor=color,ForeColor=Color.White,FlatStyle=FlatStyle.Flat,Font=new Font("Malgun Gothic",11,FontStyle.Bold)};b.Click+=(_,_)=>act();actions.Controls.Add(b);}
+ Btn("계정 저장 / 변경",()=>Save(n));Btn("관리자 자동 입력",()=>Fill(n));
+ p.Controls.Add(actions);p.Controls.Add(info);p.Controls.Add(h);return p;
+ }
+ dashboard.Controls.Add(AccountPanel(1,"초기 관리자 계정",Color.FromArgb(20,106,196)),0,0);
+ dashboard.Controls.Add(AccountPanel(2,"변경 관리자 계정",green),1,0);
+ var settings=new FlowLayoutPanel{Dock=DockStyle.Fill,AutoScroll=true,Margin=new Padding(6),Padding=new Padding(10),BackColor=Color.White};
+ void S(string text,Action act){var b=new Button{Text=text,Width=205,Height=53,BackColor=Color.FromArgb(234,246,241),FlatStyle=FlatStyle.Flat,Font=new Font("Malgun Gothic",10,FontStyle.Bold)};b.Click+=(_,_)=>act();settings.Controls.Add(b);}
+ S("🌐 공유기 접속",()=>web.CoreWebView2?.Navigate(Router));
+ S("⚙ 사용자 계정 설정",()=>MessageBox.Show("공유기 로그인 후 사용자 계정 설정 메뉴로 이동해주세요."));
+ S("↻ 페이지 새로고침",()=>web.CoreWebView2?.Reload());
+ S("🔑 계정 변경 5칸 입력",FillChange);
+ dashboard.Controls.Add(settings,0,1);dashboard.SetColumnSpan(settings,2);
+ var footer=new Label{Text="KT 공유기 매니저 PC  |  Ver. 2.0     kt service남부     충청본부 대전지점 대전지사 CS4팀(금산) 김홍식",Dock=DockStyle.Bottom,Height=42,TextAlign=ContentAlignment.MiddleCenter,Font=new Font("Malgun Gothic",10),ForeColor=Color.FromArgb(75,85,85)};
+ Controls.Add(web);Controls.Add(footer);Controls.Add(dashboard);Controls.Add(header);
  Shown+=async(_,_)=>{try{await web.EnsureCoreWebView2Async();web.CoreWebView2.Navigate(Router);}catch(Exception ex){MessageBox.Show("Microsoft Edge WebView2 Runtime이 필요합니다. "+ex.Message);}};
  }
  string FileFor(int n)=>Path.Combine(dir,"account"+n+".dat");
