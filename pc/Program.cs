@@ -30,11 +30,11 @@ internal sealed class RouterForm:Form{
  bool Safe(){if(web.CoreWebView2==null||!Uri.TryCreate(web.Source?.ToString(),UriKind.Absolute,out var u)||u.Host!="172.30.1.254"||u.Port!=8899){MessageBox.Show("KT 공유기 관리 주소에서만 자동 입력합니다.");return false;}return true;}
  async void Fill(int n){if(!Safe())return;var a=Read(n);if(a==null){MessageBox.Show("계정을 먼저 저장해주세요.");return;}
  var js="(()=>{const f=[...document.querySelectorAll('input')];const p=f.find(x=>x.type==='password');const u=f.find(x=>x.type==='text'||x.type==='email');if(!u||!p)return false;u.value="+JsonSerializer.Serialize(a.User)+";p.value="+JsonSerializer.Serialize(a.Pass)+";for(const x of [u,p]){x.dispatchEvent(new Event('input',{bubbles:true}));x.dispatchEvent(new Event('change',{bubbles:true}));}return true})()";
- try{MessageBox.Show((await web.ExecuteScriptAsync(js))=="true"?"계정 입력 완료. 보안문자를 직접 입력하세요.":"입력칸을 찾지 못했습니다.");}catch(Exception ex){MessageBox.Show(ex.Message);}
+ try{MessageBox.Show((await web.CoreWebView2!.ExecuteScriptAsync(js))=="true"?"계정 입력 완료. 보안문자를 직접 입력하세요.":"입력칸을 찾지 못했습니다.");}catch(Exception ex){MessageBox.Show(ex.Message);}
  }
  async void FillChange(){if(!Safe())return;var a=Read(1);var b=Read(2);if(a==null||b==null){MessageBox.Show("두 계정을 모두 저장해주세요.");return;}
  var vals=JsonSerializer.Serialize(new[]{a.User,b.User,a.Pass,b.Pass,b.Pass});
  var js="(()=>{if(!(document.body?.innerText||'').includes('사용자 계정 설정'))return 'wrong_page';const f=[...document.querySelectorAll('input')].filter(x=>['text','password'].includes(x.type)&&!x.disabled&&x.getClientRects().length>0);if(f.length!==5)return 'fields_'+f.length;const v="+vals+";f.forEach((x,i)=>{x.value=v[i];x.dispatchEvent(new Event('input',{bubbles:true}));x.dispatchEvent(new Event('change',{bubbles:true}));});return 'ok'})()";
- try{MessageBox.Show((await web.ExecuteScriptAsync(js))=="\"ok\""?"5칸 입력 완료. 확인 후 적용을 직접 눌러주세요.":"계정 변경 화면의 입력칸을 찾지 못했습니다.");}catch(Exception ex){MessageBox.Show(ex.Message);}
+ try{MessageBox.Show((await web.CoreWebView2!.ExecuteScriptAsync(js))=="\"ok\""?"5칸 입력 완료. 확인 후 적용을 직접 눌러주세요.":"계정 변경 화면의 입력칸을 찾지 못했습니다.");}catch(Exception ex){MessageBox.Show(ex.Message);}
  }
 }
