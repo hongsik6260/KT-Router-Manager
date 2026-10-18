@@ -150,6 +150,9 @@ public class MainActivity extends Activity {
                 if ("http".equals(request.getUrl().getScheme()) || "https".equals(request.getUrl().getScheme())) return false;
                 return true;
             }
+            @Override public void onPageFinished(WebView view,String url) {
+                if(readCredentials()!=null) fillCredentials();
+            }
             @Override public void onReceivedError(WebView view, android.webkit.WebResourceRequest request, android.webkit.WebResourceError error) {
                 if(request.isForMainFrame()) Toast.makeText(MainActivity.this, "관리자 페이지 접속 오류: "+error.getDescription(), Toast.LENGTH_LONG).show();
             }
