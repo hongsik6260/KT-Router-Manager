@@ -14,6 +14,29 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: Generate green router shortcut icon
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.Drawing
+          $bmp = New-Object System.Drawing.Bitmap(128,128)
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+          $green = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(10,115,79))
+          $white = [System.Drawing.Brushes]::White
+          $g.FillRectangle($green,0,0,128,128)
+          $g.FillRectangle($white,22,72,84,28)
+          $g.FillEllipse($white,58,48,12,12)
+          $pen = [System.Drawing.Pen]::new([System.Drawing.Color]::White,7)
+          $g.DrawArc($pen,30,20,68,70,215,110)
+          $g.DrawArc($pen,44,35,40,40,210,120)
+          $g.FillEllipse($green,35,83,8,8)
+          $g.FillEllipse($green,49,83,8,8)
+          $ico = [System.Drawing.Icon]::FromHandle($bmp.GetHicon())
+          $file = [System.IO.File]::Create("pc/app.ico")
+          $ico.Save($file)
+          $file.Close()
+          $g.Dispose()
+          $bmp.Dispose()
       - name: Publish Windows application
         run: dotnet publish pc/KT.RouterManager.PC.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o pc/publish
       - name: Install Inno Setup
