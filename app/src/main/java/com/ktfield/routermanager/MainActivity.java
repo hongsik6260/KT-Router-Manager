@@ -62,10 +62,10 @@ public class MainActivity extends Activity {
         title.setTextColor(green);
         title.setTypeface(null,Typeface.BOLD);
         root.addView(title);
-        label("v11 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
+        label("v12 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
         addButton("1. KT AX 관리자 로그인", () -> openRouter("172.30.1.254",8899));
-        addButton("1번. 관리자 초기 계정 저장 / 변경", () -> credentialsDialog(1));
-        addButton("2번. 수정된 관리자 계정 저장 / 변경", () -> credentialsDialog(2));
+        addButton("초기 관리자 계정 저장 / 변경", () -> credentialsDialog(1));
+        addButton("변경 관리자 계정 저장 / 변경", () -> credentialsDialog(2));
         addButton("관리자 계정 선택 / 삭제", () -> chooseOrDeleteAccount());
         addButton("2. 현재 공유기 자동 검색", () -> discover());
         ipInput = new EditText(this);
@@ -135,29 +135,32 @@ public class MainActivity extends Activity {
         page.setOrientation(LinearLayout.VERTICAL);
         page.setBackgroundColor(Color.WHITE);
         Button back = new Button(this);
-        back.setText("v11 · 앱 홈으로");
+        back.setText("v12 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
-        Button select = new Button(this);
-        select.setText("계정 선택: 2번 수정된 관리자");
-        select.setAllCaps(false);
-        select.setOnClickListener(v -> new AlertDialog.Builder(this).setTitle("자동 입력할 관리자 계정")
-          .setItems(new String[]{"1번. 관리자 초기 계정","2번. 수정된 관리자 계정"},(d,which)->{
-              selectedAccount=which+1;
-              select.setText(selectedAccount+"번 관리자 계정 선택됨");
-              fillCredentials();
-          }).show());
-        page.addView(select,new LinearLayout.LayoutParams(-1,(int)(56*getResources().getDisplayMetrics().density)));
-        Button fill = new Button(this);
-        fill.setText("선택한 계정 아이디 / 비밀번호 입력");
-        fill.setAllCaps(false);
-        fill.setOnClickListener(v -> fillCredentials());
-        fill.setTextColor(Color.WHITE);
-        fill.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
-        LinearLayout.LayoutParams fillParams = new LinearLayout.LayoutParams(-1,(int)(64*getResources().getDisplayMetrics().density));
-        fillParams.setMargins(12,8,12,12);
-        page.addView(fill,fillParams);
+        LinearLayout accountRow = new LinearLayout(this);
+        accountRow.setOrientation(LinearLayout.HORIZONTAL);
+        accountRow.setPadding(8,8,8,8);
+        Button initial = new Button(this);
+        initial.setText("초기 관리자");
+        initial.setAllCaps(false);
+        initial.setTextColor(Color.WHITE);
+        initial.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
+        initial.setOnClickListener(v -> { selectedAccount=1; fillCredentials(); });
+        Button changed = new Button(this);
+        changed.setText("변경 관리자");
+        changed.setAllCaps(false);
+        changed.setTextColor(Color.WHITE);
+        changed.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
+        changed.setOnClickListener(v -> { selectedAccount=2; fillCredentials(); });
+        LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0,(int)(64*getResources().getDisplayMetrics().density),1);
+        left.setMargins(0,0,4,0);
+        LinearLayout.LayoutParams right = new LinearLayout.LayoutParams(0,(int)(64*getResources().getDisplayMetrics().density),1);
+        right.setMargins(4,0,0,0);
+        accountRow.addView(initial,left);
+        accountRow.addView(changed,right);
+        page.addView(accountRow,new LinearLayout.LayoutParams(-1,-2));
         browser = new WebView(this);
         browser.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
