@@ -63,59 +63,85 @@ public class MainActivity extends Activity {
         setContentView(scroll);
         LinearLayout header=new LinearLayout(this);
         header.setOrientation(LinearLayout.VERTICAL);
-        header.setPadding(dp(16),dp(18),dp(16),dp(18));
-        header.setBackgroundColor(Color.rgb(0,125,77));
+        header.setPadding(dp(12),dp(12),dp(12),dp(12));
+        header.setBackgroundColor(Color.rgb(0,127,79));
         TextView logo=new TextView(this);
-        logo.setText("kt service남부");
-        logo.setTextColor(Color.WHITE);logo.setTextSize(27);logo.setTypeface(null,Typeface.BOLD);
+        logo.setText("kt service남부   │   KT 공유기 매니저");
+        logo.setTextColor(Color.WHITE);logo.setTextSize(19);logo.setTypeface(null,Typeface.BOLD);
         header.addView(logo);
-        TextView heading=new TextView(this);
-        heading.setText("KT 공유기 매니저");
-        heading.setTextColor(Color.WHITE);heading.setTextSize(23);heading.setTypeface(null,Typeface.BOLD);
-        header.addView(heading);
-        TextView sub=new TextView(this);sub.setText("GiGA WiFi home  ·  KM15-103H");
-        sub.setTextColor(Color.WHITE);sub.setTextSize(14);header.addView(sub);
+        TextView subtitle=new TextView(this);subtitle.setText("GiGA WiFi home");
+        subtitle.setTextColor(Color.WHITE);subtitle.setTextSize(14);header.addView(subtitle);
         root.addView(header,new LinearLayout.LayoutParams(-1,-2));
 
-        TextView accountsTitle=new TextView(this);
-        accountsTitle.setText("관리자 계정");accountsTitle.setTextSize(19);
-        accountsTitle.setTypeface(null,Typeface.BOLD);accountsTitle.setTextColor(Color.BLACK);
-        accountsTitle.setPadding(dp(6),dp(22),0,dp(10));root.addView(accountsTitle);
-
         LinearLayout accounts=new LinearLayout(this);accounts.setOrientation(LinearLayout.HORIZONTAL);
-        Button initial=makeGreenButton("초기 관리자\\n계정 저장 / 변경",()->credentialsDialog(1));
-        Button changed=makeGreenButton("변경 관리자\\n계정 저장 / 변경",()->credentialsDialog(2));
-        initial.setTextSize(13);changed.setTextSize(13);
-        initial.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(22,108,199)));
-        LinearLayout.LayoutParams lp1=new LinearLayout.LayoutParams(0,dp(85),1);lp1.setMargins(0,0,dp(4),0);
-        LinearLayout.LayoutParams lp2=new LinearLayout.LayoutParams(0,dp(85),1);lp2.setMargins(dp(4),0,0,0);
-        accounts.addView(initial,lp1);accounts.addView(changed,lp2);
+        LinearLayout.LayoutParams a1=new LinearLayout.LayoutParams(0,-2,1);a1.setMargins(0,dp(12),dp(4),0);
+        LinearLayout.LayoutParams a2=new LinearLayout.LayoutParams(0,-2,1);a2.setMargins(dp(4),dp(12),0,0);
+        accounts.addView(makeAccountCard(1,"초기 관리자 계정",Color.rgb(15,106,205)),a1);
+        accounts.addView(makeAccountCard(2,"변경 관리자 계정",Color.rgb(0,145,80)),a2);
         root.addView(accounts,new LinearLayout.LayoutParams(-1,-2));
 
-        TextView section=new TextView(this);section.setText("◉  공유기 접속 및 설정");
-        section.setTextColor(Color.BLACK);section.setTextSize(19);section.setTypeface(null,Typeface.BOLD);
-        section.setPadding(dp(6),dp(26),0,dp(10));root.addView(section);
-        addButton("🌐  공유기 접속",()->openRouter("172.30.1.254",8899));
-        addButton("⚙  사용자 계정 설정 (로그인 후 이동)",()->openRouter("172.30.1.254",8899));
-        addButton("↻  공유기 페이지 다시 열기",()->openRouter("172.30.1.254",8899));
-        addButton("🔑  저장된 관리자 계정 삭제",()->chooseOrDeleteAccount());
-        TextView extras=new TextView(this);extras.setText("연결 도구");
-        extras.setTextSize(17);extras.setTextColor(Color.DKGRAY);extras.setPadding(0,dp(18),0,dp(8));root.addView(extras);
-        addButton("현재 공유기 자동 검색",()->discover());
-        ipInput=new EditText(this);ipInput.setSingleLine(true);
-        ipInput.setHint("공유기 IP (예: 172.30.1.254)");
-        ipInput.setInputType(InputType.TYPE_CLASS_TEXT);root.addView(ipInput);
-        addButton("입력한 IP로 접속",()->openRouter(ipInput.getText().toString().trim(),8899));
-        addButton("네트워크 진단",()->diagnose());
-        addButton("휴대폰 Wi-Fi 설정",()->startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)));
+        TextView section=new TextView(this);
+        section.setText("🌐  공유기 접속 및 설정");
+        section.setTextSize(18);section.setTypeface(null,Typeface.BOLD);
+        section.setTextColor(Color.BLACK);section.setPadding(dp(4),dp(20),0,dp(10));
+        root.addView(section);
+        LinearLayout tiles=new LinearLayout(this);tiles.setOrientation(LinearLayout.HORIZONTAL);
+        addTile(tiles,"공유기 접속",()->openRouter("172.30.1.254",8899));
+        addTile(tiles,"사용자 계정 설정",()->openRouter("172.30.1.254",8899));
+        root.addView(tiles);
+        LinearLayout tiles2=new LinearLayout(this);tiles2.setOrientation(LinearLayout.HORIZONTAL);
+        addTile(tiles2,"페이지 새로고침",()->openRouter("172.30.1.254",8899));
+        addTile(tiles2,"로그아웃 / 닫기",()->new AlertDialog.Builder(this).setMessage("관리자 페이지를 닫을까요? 공유기 세션 로그아웃은 관리자 페이지에서 진행하세요.").setPositiveButton("닫기",(d,w)->closeRouterWebView()).setNegativeButton("취소",null).show());
+        root.addView(tiles2);
         output=new TextView(this);
-        output.setText("KT 공유기 Wi-Fi에 연결한 후 로그인하세요. 보안문자는 직접 입력해야 합니다.");
-        output.setTextSize(14);output.setTextColor(Color.DKGRAY);
-        output.setPadding(dp(8),dp(16),dp(8),dp(18));root.addView(output);
+        output.setText("KT 공유기 Wi-Fi 연결 후 사용하세요. 보안문자는 직접 입력합니다.");
+        output.setTextSize(12);output.setTextColor(Color.DKGRAY);
+        output.setPadding(dp(8),dp(18),dp(8),dp(12));root.addView(output);
         TextView footer=new TextView(this);
-        footer.setText("KT 공유기 매니저  |  Ver. 17\\nkt service남부\\n충청본부 대전지점 대전지사 CS4팀(금산) 김홍식");
-        footer.setTextSize(13);footer.setTextColor(Color.DKGRAY);
-        footer.setPadding(dp(10),dp(18),dp(10),dp(26));root.addView(footer);
+        footer.setText("KT 공유기 매니저  |  Ver. 18\nkt service남부\n충청본부 대전지점 대전지사 CS4팀(금산) 김홍식");
+        footer.setTextSize(12);footer.setTextColor(Color.DKGRAY);
+        footer.setPadding(dp(8),dp(12),dp(8),dp(22));root.addView(footer);
+    }
+    void addTile(LinearLayout row,String text,Runnable action) {
+        Button b=new Button(this);b.setText(text);b.setTextSize(13);b.setAllCaps(false);
+        b.setTextColor(Color.rgb(10,65,58));
+        b.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.rgb(223,243,235)));
+        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,dp(62),1);
+        p.setMargins(dp(3),dp(3),dp(3),dp(3));row.addView(b,p);
+        b.setOnClickListener(v->action.run());
+    }
+    LinearLayout makeAccountCard(int n,String name,int color) {
+        LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(7),dp(9),dp(7),dp(10));
+        card.setBackgroundColor(n==1?Color.rgb(234,244,255):Color.rgb(231,249,239));
+        TextView title=new TextView(this);title.setText(name);title.setTextColor(color);
+        title.setTextSize(16);title.setTypeface(null,Typeface.BOLD);card.addView(title);
+        TextView sub=new TextView(this);sub.setText(n==1?"공유기 초기 설정":"변경한 관리자 계정");
+        sub.setTextSize(11);sub.setTextColor(Color.DKGRAY);card.addView(sub);
+        EditText id=new EditText(this);id.setSingleLine(true);id.setTextSize(14);
+        id.setHint("아이디");card.addView(id,new LinearLayout.LayoutParams(-1,dp(50)));
+        EditText pw=new EditText(this);pw.setSingleLine(true);pw.setTextSize(14);
+        pw.setHint("비밀번호");pw.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        card.addView(pw,new LinearLayout.LayoutParams(-1,dp(50)));
+        JSONObject saved=readCredentials(n);
+        if(saved!=null){id.setText(saved.optString("user"));pw.setText(saved.optString("pass"));}
+        Button save=makeGreenButton("계정 저장",()->{
+            String u=id.getText().toString().trim(),p=pw.getText().toString();
+            if(u.isEmpty()||p.isEmpty())Toast.makeText(this,"아이디와 비밀번호를 입력하세요.",Toast.LENGTH_LONG).show();
+            else saveCredentials(n,u,p);
+        });
+        save.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
+        save.setTextSize(12);card.addView(save,new LinearLayout.LayoutParams(-1,dp(49)));
+        Button fill=makeGreenButton("자동 입력",()->{
+            String u=id.getText().toString().trim(),p=pw.getText().toString();
+            if(!u.isEmpty()&&!p.isEmpty())saveCredentials(n,u,p);
+            selectedAccount=n;
+            if(browser==null)showRouterWebView("http://172.30.1.254:8899/");
+            else fillCredentials();
+        });
+        fill.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
+        fill.setTextSize(12);card.addView(fill,new LinearLayout.LayoutParams(-1,dp(49)));
+        return card;
     }
     void label(String value) {
         TextView t = new TextView(this);
@@ -179,7 +205,7 @@ public class MainActivity extends Activity {
             return insets;
         });
         Button back = new Button(this);
-        back.setText("v17 · 앱 홈으로");
+        back.setText("v18 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
