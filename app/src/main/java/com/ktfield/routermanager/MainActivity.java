@@ -92,11 +92,6 @@ public class MainActivity extends Activity {
         ipInput.setInputType(InputType.TYPE_CLASS_TEXT);
         root.addView(ipInput);
         addButton("3. 입력한 IP로 관리자 접속", () -> openRouter(ipInput.getText().toString().trim(),8899));
-        label("Wi-Fi 설정 항목");
-        addButton("2.4GHz Wi-Fi 설정 열기", () -> openRouter("172.30.1.254",8899));
-        addButton("5GHz Wi-Fi 설정 열기", () -> openRouter("172.30.1.254",8899));
-        addButton("2.4GHz + 5GHz Wi-Fi 설정 열기", () -> openRouter("172.30.1.254",8899));
-        label("현재는 관리자 페이지로 연결됩니다. 주파수 설정으로 바로 이동하거나 값을 저장하려면 공유기 설정 화면 구조 확인이 필요합니다.");
         addButton("4. 네트워크 진단", () -> diagnose());
         addButton("5. 휴대폰 Wi-Fi 설정", () -> startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)));
         output = new TextView(this);
