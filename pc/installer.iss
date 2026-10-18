@@ -2,11 +2,11 @@
 [Setup]
 AppId={{AB29E22B-2D3E-4CF9-B09B-8CCB9821A8ED}
 AppName={#AppName}
-AppVersion=7.0
+AppVersion=8.0
 DefaultDirName={autopf}\KT Router Manager PC
 DefaultGroupName=KT Router Manager PC
 OutputDir=output
-OutputBaseFilename=KT_Router_Manager_PC_Setup_v7
+OutputBaseFilename=KT_Router_Manager_PC_Setup_v8
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=lowest
