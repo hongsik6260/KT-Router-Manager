@@ -2,7 +2,7 @@
 [Setup]
 AppId={{AB29E22B-2D3E-4CF9-B09B-8CCB9821A8ED}
 AppName={#AppName}
-AppVersion=1.0
+AppVersion=2.0
 DefaultDirName={autopf}\KT Router Manager PC
 DefaultGroupName=KT Router Manager PC
 OutputDir=output
