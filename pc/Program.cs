@@ -106,7 +106,7 @@ internal sealed class RouterForm:Form{
 
  body{background:#fff;color:#101827}
  .top{min-height:143px;margin:1px 1px 0;border-radius:21px;background:linear-gradient(175deg,#00aa56 0%,#008948 35%,#006632 100%);border:1px solid #3cde85;box-shadow:inset 0 2px 4px #ffffff35,0 5px 15px #076e3840;padding:22px 40px;gap:36px}
- .brand{font-size:49px;letter-spacing:-2.5px;text-shadow:0 1px 2px #002b16}.brand .kt{font-size:74px;line-height:1}.brand .service{color:#fa173a}
+ .brand{font-size:44.1px;letter-spacing:-2.5px;text-shadow:0 1px 2px #002b16}.brand .kt{font-size:66.6px;line-height:1}.brand .service{color:#fa173a}
  .bar{height:88px}.heading{font-size:48px;letter-spacing:-1px;text-shadow:0 1px 3px #003e26}.sub{font-size:27px}
  .topright{display:flex;gap:26px;align-items:center;color:white;font-size:38px}
  main{padding:20px 22px 12px;max-width:none}
@@ -143,7 +143,7 @@ internal sealed class RouterForm:Form{
  footer{margin-top:18px;padding:18px 12px;border-top:2px solid #e0e5e5;font-size:16px}
  footer b{font-size:20px}
  .warning{font-size:11px;color:#a5acb2}
- @media(max-width:1150px){.top{padding:17px;gap:18px;min-height:105px}.brand{font-size:27px}.brand .kt{font-size:43px}.heading{font-size:28px}.sub{font-size:17px}.bar{height:64px}.topright{font-size:25px;gap:12px}.cardhead{padding:12px;min-height:85px}.avatar{transform:scale(.65);margin:-12px}.cardtitle{font-size:21px}.hint{font-size:12px}.fields{padding:12px}.field{grid-template-columns:78px 1fr;gap:5px;margin-bottom:8px}label{font-size:14px}input{font-size:15px;min-height:42px;padding:7px}.action,.save{min-height:48px;font-size:15px}.save{flex-basis:60px;font-size:12px}.settings h2{font-size:19px}.tile{min-height:75px;padding:8px;gap:6px}.tile .emoji{font-size:28px;min-width:30px}.tile strong{font-size:14px}.tile small{font-size:10px}footer{font-size:11px}footer b{font-size:13px}}
+ @media(max-width:1150px){.top{padding:17px;gap:18px;min-height:105px}.brand{font-size:24.3px}.brand .kt{font-size:38.7px}.heading{font-size:28px}.sub{font-size:17px}.bar{height:64px}.topright{font-size:25px;gap:12px}.cardhead{padding:12px;min-height:85px}.avatar{transform:scale(.65);margin:-12px}.cardtitle{font-size:21px}.hint{font-size:12px}.fields{padding:12px}.field{grid-template-columns:78px 1fr;gap:5px;margin-bottom:8px}label{font-size:14px}input{font-size:15px;min-height:42px;padding:7px}.action,.save{min-height:48px;font-size:15px}.save{flex-basis:60px;font-size:12px}.settings h2{font-size:19px}.tile{min-height:75px;padding:8px;gap:6px}.tile .emoji{font-size:28px;min-width:30px}.tile strong{font-size:14px}.tile small{font-size:10px}footer{font-size:11px}footer b{font-size:13px}}
  @media(max-width:850px){.accounts{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,1fr)}}
  </style></head><body>
  <header class="top"><div class="brand"><span class="kt">kt</span> <span class="service">service 남부</span></div><div class="bar"></div><div><div class="heading">KT 공유기 매니저</div><div class="sub">GiGA WiFi home</div></div><div class="topright"><span>⚙</span><span>ⓘ</span><span>⋮</span></div></header>
@@ -160,7 +160,7 @@ internal sealed class RouterForm:Form{
  <button class="tile" onclick="send('refresh')"><span class="emoji">⟳</span><span><strong>페이지 새로고침</strong><small>현재 첫 화면 다시 표시</small></span></button>
  <button class="tile" onclick="send('logout')"><span class="emoji">⇥</span><span><strong>로그아웃</strong><small>첫 화면으로 돌아가기</small></span></button>
  </div></section>
- <footer><div>📶 <b>KT 공유기 매니저</b> &nbsp; | &nbsp; Ver. 7.0 <div class="hint">GiGA WiFi home</div></div><div><b>kt service남부</b> &nbsp; | &nbsp; 충청본부 대전지점 대전지사 CS4팀(금산) 김홍식</div></footer>
+ <footer><div>📶 <b>KT 공유기 매니저</b> &nbsp; | &nbsp; Ver. 8.0 <div class="hint">GiGA WiFi home</div></div><div><b>kt service남부</b> &nbsp; | &nbsp; 충청본부 대전지점 대전지사 CS4팀(금산) 김홍식</div></footer>
  <div class="warning">KT 공유기 Wi-Fi에 연결한 상태에서 사용하세요. 보안문자는 직접 입력해야 합니다. 계정 정보는 Windows 사용자 계정으로 암호화해 저장합니다.</div></main>
  <script>
  const saved=__DATA__;
