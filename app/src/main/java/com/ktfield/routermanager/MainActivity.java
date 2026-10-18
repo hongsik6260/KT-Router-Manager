@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
         title.setTextColor(green);
         title.setTypeface(null,Typeface.BOLD);
         root.addView(title);
-        label("v13 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
+        label("v14 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
         addButton("1. KT AX 관리자 로그인", () -> openRouter("172.30.1.254",8899));
         LinearLayout accounts = new LinearLayout(this);
         accounts.setOrientation(LinearLayout.HORIZONTAL);
