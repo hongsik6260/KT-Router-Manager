@@ -64,8 +64,8 @@ public class MainActivity extends Activity {
         setContentView(scroll);
         LinearLayout header=new LinearLayout(this);
         header.setOrientation(LinearLayout.VERTICAL);
-        header.setPadding(dp(12),dp(12),dp(12),dp(12));
-        header.setBackgroundColor(Color.rgb(0,127,79));
+        header.setPadding(dp(17),dp(22),dp(17),dp(22));
+        header.setBackgroundColor(Color.rgb(0,117,75));
         TextView logo=new TextView(this);
         logo.setText("kt service남부   │   KT 공유기 매니저");
         logo.setTextColor(Color.WHITE);logo.setTextSize(19);logo.setTypeface(null,Typeface.BOLD);
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
         output.setTextSize(12);output.setTextColor(Color.DKGRAY);
         output.setPadding(dp(8),dp(18),dp(8),dp(12));root.addView(output);
         TextView footer=new TextView(this);
-        footer.setText("KT 공유기 매니저  |  Ver. 19\nkt service남부\n충청본부 대전지점 대전지사 CS4팀(금산) 김홍식");
+        footer.setText("KT 공유기 매니저  |  Ver. 20\nkt service남부\n충청본부 대전지점 대전지사 CS4팀(금산) 김홍식");
         footer.setTextSize(12);footer.setTextColor(Color.DKGRAY);
         footer.setPadding(dp(8),dp(12),dp(8),dp(22));root.addView(footer);
     }
@@ -207,7 +207,7 @@ public class MainActivity extends Activity {
             return insets;
         });
         Button back = new Button(this);
-        back.setText("v19 · 앱 홈으로");
+        back.setText("v20 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
