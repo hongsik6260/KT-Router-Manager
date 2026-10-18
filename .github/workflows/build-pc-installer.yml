@@ -43,12 +43,17 @@ jobs:
         run: choco install innosetup -y --no-progress
       - name: Create setup EXE
         shell: pwsh
-        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "pc\installer.iss"'
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/O$((Resolve-Path .).Path)\pc\output" "/FKT_Router_Manager_PC_Setup_v6" "pc\installer.iss"'
       - name: Verify setup EXE exists
         shell: pwsh
         run: |
-          Get-ChildItem pc/output
-          if (-not (Test-Path 'pc/output/KT_Router_Manager_PC_Setup_v6.exe')) { throw 'PC setup EXE missing' }
+          Get-ChildItem pc/output -ErrorAction SilentlyContinue
+          $expected = 'pc/output/KT_Router_Manager_PC_Setup_v6.exe'
+          if (-not (Test-Path $expected)) {
+            $found = Get-ChildItem -Path . -Filter 'KT_Router_Manager_PC_Setup_v6.exe' -Recurse -File | Select-Object -First 1
+            if ($found) { New-Item -ItemType Directory -Force pc/output | Out-Null; Copy-Item $found.FullName $expected }
+          }
+          if (-not (Test-Path $expected)) { throw 'PC setup EXE missing; no matching installer output found' }
       - uses: actions/upload-artifact@v4
         with:
           name: KT_Router_Manager_PC_Setup_v6
