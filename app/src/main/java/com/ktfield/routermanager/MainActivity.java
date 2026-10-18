@@ -17,6 +17,7 @@ import android.webkit.WebViewClient;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -51,6 +52,12 @@ public class MainActivity extends Activity {
         root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(28,24,28,32);
+        scroll.setOnApplyWindowInsetsListener((v,insets)->{
+            int top=insets.getInsets(WindowInsets.Type.statusBars()).top;
+            int bottom=insets.getInsets(WindowInsets.Type.navigationBars()).bottom;
+            scroll.setPadding(0,top,0,bottom);
+            return insets;
+        });
         root.setBackgroundColor(Color.rgb(244,249,246));
         scroll.addView(root);
         setContentView(scroll);
@@ -62,10 +69,21 @@ public class MainActivity extends Activity {
         title.setTextColor(green);
         title.setTypeface(null,Typeface.BOLD);
         root.addView(title);
-        label("v12 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
+        label("v13 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
         addButton("1. KT AX 관리자 로그인", () -> openRouter("172.30.1.254",8899));
-        addButton("초기 관리자 계정 저장 / 변경", () -> credentialsDialog(1));
-        addButton("변경 관리자 계정 저장 / 변경", () -> credentialsDialog(2));
+        LinearLayout accounts = new LinearLayout(this);
+        accounts.setOrientation(LinearLayout.HORIZONTAL);
+        Button firstAccount = makeGreenButton("초기 관리자", () -> credentialsDialog(1));
+        Button secondAccount = makeGreenButton("변경 관리자", () -> credentialsDialog(2));
+        LinearLayout.LayoutParams firstP = new LinearLayout.LayoutParams(0,dp(60),1);
+        firstP.setMargins(0,0,dp(4),0);
+        LinearLayout.LayoutParams secondP = new LinearLayout.LayoutParams(0,dp(60),1);
+        secondP.setMargins(dp(4),0,0,0);
+        accounts.addView(firstAccount,firstP);
+        accounts.addView(secondAccount,secondP);
+        LinearLayout.LayoutParams accountRowP=new LinearLayout.LayoutParams(-1,-2);
+        accountRowP.bottomMargin=dp(10);
+        root.addView(accounts,accountRowP);
         addButton("관리자 계정 선택 / 삭제", () -> chooseOrDeleteAccount());
         addButton("2. 현재 공유기 자동 검색", () -> discover());
         ipInput = new EditText(this);
@@ -75,9 +93,10 @@ public class MainActivity extends Activity {
         root.addView(ipInput);
         addButton("3. 입력한 IP로 관리자 접속", () -> openRouter(ipInput.getText().toString().trim(),8899));
         label("Wi-Fi 설정 항목");
-        addButton("2.4GHz 설정 안내", () -> showBand("2.4GHz"));
-        addButton("5GHz 설정 안내", () -> showBand("5GHz"));
-        addButton("2.4GHz + 5GHz 설정 안내", () -> showBand("2.4GHz와 5GHz"));
+        addButton("2.4GHz Wi-Fi 설정 열기", () -> openRouter("172.30.1.254",8899));
+        addButton("5GHz Wi-Fi 설정 열기", () -> openRouter("172.30.1.254",8899));
+        addButton("2.4GHz + 5GHz Wi-Fi 설정 열기", () -> openRouter("172.30.1.254",8899));
+        label("현재는 관리자 페이지로 연결됩니다. 주파수 설정으로 바로 이동하거나 값을 저장하려면 공유기 설정 화면 구조 확인이 필요합니다.");
         addButton("4. 네트워크 진단", () -> diagnose());
         addButton("5. 휴대폰 Wi-Fi 설정", () -> startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)));
         output = new TextView(this);
@@ -92,6 +111,15 @@ public class MainActivity extends Activity {
         TextView t = new TextView(this);
         t.setText(value); t.setTextSize(16); t.setTextColor(Color.DKGRAY);
         t.setPadding(0,16,0,20); root.addView(t);
+    }
+    int dp(int n) {return (int)(n*getResources().getDisplayMetrics().density);}
+    Button makeGreenButton(String label,Runnable action) {
+        Button b=new Button(this);
+        b.setText(label);b.setTextSize(15);b.setAllCaps(false);
+        b.setTextColor(Color.WHITE);
+        b.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
+        b.setOnClickListener(v->action.run());
+        return b;
     }
     void addButton(String label, Runnable action) {
         Button b = new Button(this);
@@ -134,8 +162,14 @@ public class MainActivity extends Activity {
         LinearLayout page = new LinearLayout(this);
         page.setOrientation(LinearLayout.VERTICAL);
         page.setBackgroundColor(Color.WHITE);
+        page.setOnApplyWindowInsetsListener((v,insets)->{
+            int top=insets.getInsets(WindowInsets.Type.statusBars()).top;
+            int bottom=insets.getInsets(WindowInsets.Type.navigationBars()).bottom;
+            page.setPadding(0,top,0,bottom);
+            return insets;
+        });
         Button back = new Button(this);
-        back.setText("v12 · 앱 홈으로");
+        back.setText("v13 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
