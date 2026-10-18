@@ -10,6 +10,7 @@ OutputBaseFilename=KT_Router_Manager_PC_Setup_v1
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=lowest
+SetupIconFile=app.ico
 [Files]
 Source: "publish\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
 [Icons]
