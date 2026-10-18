@@ -211,6 +211,16 @@ public class MainActivity extends Activity {
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
+        LinearLayout accountRow=new LinearLayout(this);
+        accountRow.setOrientation(LinearLayout.HORIZONTAL);
+        Button initial=makeGreenButton("초기 관리자",()->{selectedAccount=1;fillCredentials();});
+        Button changed=makeGreenButton("변경 관리자",()->{selectedAccount=2;fillCredentials();});
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(0,dp(55),1);
+        accountRow.addView(initial,new LinearLayout.LayoutParams(0,dp(55),1));
+        accountRow.addView(changed,new LinearLayout.LayoutParams(0,dp(55),1));
+        page.addView(accountRow,new LinearLayout.LayoutParams(-1,-2));
+        Button changeFill=makeGreenButton("계정 변경 화면 5개 항목 자동 입력",()->fillChangeForm());
+        page.addView(changeFill,new LinearLayout.LayoutParams(-1,dp(54)));
         browser = new WebView(this);
         browser.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
