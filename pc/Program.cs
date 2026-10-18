@@ -10,14 +10,14 @@ internal sealed class RouterForm:Form{
  Text="KT 공유기 매니저 PC";Width=1240;Height=940;MinimumSize=new Size(850,700);StartPosition=FormStartPosition.CenterScreen;
  BackColor=Color.FromArgb(248,251,249);
  var green=Color.FromArgb(0,128,77);
- var header=new Panel{Dock=DockStyle.Top,Height=108,BackColor=green};
+ var header=new Panel{Dock=DockStyle.Top,Height=125,BackColor=green};
  var logo=new Label{Text="kt service남부",ForeColor=Color.White,Font=new Font("Malgun Gothic",24,FontStyle.Bold),Location=new Point(25,18),AutoSize=true};
  var title=new Label{Text="KT 공유기 매니저",ForeColor=Color.White,Font=new Font("Malgun Gothic",23,FontStyle.Bold),Location=new Point(390,13),AutoSize=true};
  var subtitle=new Label{Text="GiGA WiFi home",ForeColor=Color.White,Font=new Font("Malgun Gothic",12),Location=new Point(394,61),AutoSize=true};
  header.Controls.AddRange(new Control[]{logo,title,subtitle});
- var dashboard=new TableLayoutPanel{Dock=DockStyle.Top,Height=410,ColumnCount=2,RowCount=2,Padding=new Padding(14,12,14,8)};
+ var dashboard=new TableLayoutPanel{Dock=DockStyle.Top,Height=470,ColumnCount=2,RowCount=2,Padding=new Padding(14,12,14,8)};
  dashboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));dashboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));
- dashboard.RowStyles.Add(new RowStyle(SizeType.Absolute,245));dashboard.RowStyles.Add(new RowStyle(SizeType.Percent,100));
+ dashboard.RowStyles.Add(new RowStyle(SizeType.Absolute,265));dashboard.RowStyles.Add(new RowStyle(SizeType.Percent,100));
  Panel AccountPanel(int n,string label,Color color){
  var p=new Panel{Dock=DockStyle.Fill,BackColor=n==1?Color.FromArgb(234,244,255):Color.FromArgb(231,249,239),Margin=new Padding(6),Padding=new Padding(12)};
  var h=new Label{Text=label,ForeColor=color,Font=new Font("Malgun Gothic",15,FontStyle.Bold),Dock=DockStyle.Top,Height=36};
@@ -42,9 +42,10 @@ internal sealed class RouterForm:Form{
  S("🌐 공유기 접속",()=>web.CoreWebView2?.Navigate(Router));
  S("⚙ 사용자 계정 설정",()=>MessageBox.Show("공유기 로그인 후 사용자 계정 설정 메뉴로 이동해주세요."));
  S("↻ 페이지 새로고침",()=>web.CoreWebView2?.Reload());
+ S("🔑 계정 변경 5칸 입력",FillChange);
 
  dashboard.Controls.Add(settings,0,1);dashboard.SetColumnSpan(settings,2);
- var footer=new Label{Text="KT 공유기 매니저 PC  |  Ver. 4.0     kt service남부     충청본부 대전지점 대전지사 CS4팀(금산) 김홍식",Dock=DockStyle.Bottom,Height=42,TextAlign=ContentAlignment.MiddleCenter,Font=new Font("Malgun Gothic",10),ForeColor=Color.FromArgb(75,85,85)};
+ var footer=new Label{Text="KT 공유기 매니저 PC  |  Ver. 5.0     kt service남부     충청본부 대전지점 대전지사 CS4팀(금산) 김홍식",Dock=DockStyle.Bottom,Height=42,TextAlign=ContentAlignment.MiddleCenter,Font=new Font("Malgun Gothic",10),ForeColor=Color.FromArgb(75,85,85)};
  Controls.Add(web);Controls.Add(footer);Controls.Add(dashboard);Controls.Add(header);
  Shown+=async(_,_)=>{try{await web.EnsureCoreWebView2Async();web.CoreWebView2.NavigationCompleted+=async(sender,args)=>{if(pendingLoginAccount!=0){int account=pendingLoginAccount;pendingLoginAccount=0;await System.Threading.Tasks.Task.Delay(450);Fill(account);}};web.CoreWebView2.Navigate(Router);}catch(Exception ex){MessageBox.Show("Microsoft Edge WebView2 Runtime이 필요합니다. "+ex.Message);}};
  }
