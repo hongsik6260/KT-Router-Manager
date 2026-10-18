@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
         title.setTextColor(green);
         title.setTypeface(null,Typeface.BOLD);
         root.addView(title);
-        label("v14 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
+        label("v15 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
         addButton("1. KT AX 관리자 로그인", () -> openRouter("172.30.1.254",8899));
         LinearLayout accounts = new LinearLayout(this);
         accounts.setOrientation(LinearLayout.HORIZONTAL);
@@ -164,7 +164,7 @@ public class MainActivity extends Activity {
             return insets;
         });
         Button back = new Button(this);
-        back.setText("v14 · 앱 홈으로");
+        back.setText("v15 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
@@ -190,6 +190,8 @@ public class MainActivity extends Activity {
         accountRow.addView(initial,left);
         accountRow.addView(changed,right);
         page.addView(accountRow,new LinearLayout.LayoutParams(-1,-2));
+        Button changeFill = makeGreenButton("계정 변경 화면 5개 항목 자동 입력", () -> fillChangeForm());
+        page.addView(changeFill,new LinearLayout.LayoutParams(-1,dp(58)));
         browser = new WebView(this);
         browser.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
@@ -294,6 +296,35 @@ public class MainActivity extends Activity {
           "function set(el,val){if(!el)return;var setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;setter.call(el,val);el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}"+
           "set(id,"+JSONObject.quote(user)+");set(pw,"+JSONObject.quote(pass)+");return !!(id&&pw);})()";
         browser.evaluateJavascript(js,result->Toast.makeText(this,"true".equals(result)?"계정 입력 완료. 보안문자를 직접 입력하세요.":"입력칸을 찾지 못했습니다. 직접 입력해주세요.",Toast.LENGTH_LONG).show());
+    }
+    void fillChangeForm() {
+        if(browser==null) return;
+        Uri uri=Uri.parse(browser.getUrl()==null?"":browser.getUrl());
+        if(!"172.30.1.254".equals(uri.getHost()) || uri.getPort()!=8899) {
+            Toast.makeText(this,"확인된 KT 공유기 관리 주소에서만 입력할 수 있습니다.",Toast.LENGTH_LONG).show();return;
+        }
+        JSONObject oldAccount=readCredentials(1),newAccount=readCredentials(2);
+        if(oldAccount==null || newAccount==null) {
+            Toast.makeText(this,"홈에서 초기 관리자와 변경 관리자 계정을 모두 저장해주세요.",Toast.LENGTH_LONG).show();return;
+        }
+        String[] values={oldAccount.optString("user"),newAccount.optString("user"),oldAccount.optString("pass"),newAccount.optString("pass"),newAccount.optString("pass")};
+        for(String value:values) if(value.isEmpty()) {
+            Toast.makeText(this,"저장된 계정 정보가 비어 있습니다.",Toast.LENGTH_LONG).show();return;
+        }
+        String data=new org.json.JSONArray(java.util.Arrays.asList(values)).toString();
+        String js="(function(){"+
+          "var text=(document.body&&document.body.innerText)||'';"+
+          "if(!text.includes('사용자 계정 설정')||!text.includes('변경할 비밀번호'))return 'wrong_page';"+
+          "var inputs=Array.from(document.querySelectorAll('input')).filter(x=>"+
+          "['text','password'].includes((x.type||'').toLowerCase())&&!x.disabled&&!x.readOnly&&x.getClientRects().length>0);"+
+          "if(inputs.length!==5)return 'fields_'+inputs.length;"+
+          "var vals="+data+";"+
+          "for(var i=0;i<5;i++){var el=inputs[i];var setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;setter.call(el,vals[i]);el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}"+
+          "return 'ok';})()";
+        browser.evaluateJavascript(js,result->{
+            if("\"ok\"".equals(result)) Toast.makeText(this,"5개 항목 입력 완료. 확인 후 적용을 직접 눌러주세요.",Toast.LENGTH_LONG).show();
+            else Toast.makeText(this,"자동 입력하지 않았습니다. 계정 변경 화면과 입력칸을 확인해주세요. ("+result+")",Toast.LENGTH_LONG).show();
+        });
     }
     void closeRouterWebView() {
         if(browser != null) {
