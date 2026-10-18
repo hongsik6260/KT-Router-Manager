@@ -44,7 +44,12 @@ jobs:
       - name: Create setup EXE
         shell: pwsh
         run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "pc\installer.iss"'
+      - name: Verify setup EXE exists
+        shell: pwsh
+        run: |
+          Get-ChildItem pc/output
+          if (-not (Test-Path 'pc/output/KT_Router_Manager_PC_Setup_v5.exe')) { throw 'PC setup EXE missing' }
       - uses: actions/upload-artifact@v4
         with:
-          name: KT_Router_Manager_PC_Setup_v3
-          path: pc/output/KT_Router_Manager_PC_Setup_v3.exe
+          name: KT_Router_Manager_PC_Setup_v5
+          path: pc/output/KT_Router_Manager_PC_Setup_v5.exe
