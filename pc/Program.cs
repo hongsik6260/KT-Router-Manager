@@ -14,17 +14,25 @@ internal sealed class RouterForm:Form{
  var title=new Label{Text="KT 공유기 매니저",ForeColor=Color.White,Font=new Font("Malgun Gothic",23,FontStyle.Bold),Location=new Point(390,13),AutoSize=true};
  var subtitle=new Label{Text="GiGA WiFi home",ForeColor=Color.White,Font=new Font("Malgun Gothic",12),Location=new Point(394,61),AutoSize=true};
  header.Controls.AddRange(new Control[]{logo,title,subtitle});
- var dashboard=new TableLayoutPanel{Dock=DockStyle.Top,Height=360,ColumnCount=2,RowCount=2,Padding=new Padding(14,12,14,8)};
+ var dashboard=new TableLayoutPanel{Dock=DockStyle.Top,Height=410,ColumnCount=2,RowCount=2,Padding=new Padding(14,12,14,8)};
  dashboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));dashboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));
- dashboard.RowStyles.Add(new RowStyle(SizeType.Absolute,205));dashboard.RowStyles.Add(new RowStyle(SizeType.Percent,100));
+ dashboard.RowStyles.Add(new RowStyle(SizeType.Absolute,245));dashboard.RowStyles.Add(new RowStyle(SizeType.Percent,100));
  Panel AccountPanel(int n,string label,Color color){
- var p=new Panel{Dock=DockStyle.Fill,BackColor=Color.FromArgb(240,248,246),Margin=new Padding(6),Padding=new Padding(14)};
- var h=new Label{Text=label,ForeColor=color,Font=new Font("Malgun Gothic",16,FontStyle.Bold),Dock=DockStyle.Top,Height=42};
- var info=new Label{Text="아이디와 비밀번호는 암호화 저장됩니다.",Dock=DockStyle.Top,Height=34,Font=new Font("Malgun Gothic",10)};
- var actions=new FlowLayoutPanel{Dock=DockStyle.Fill,FlowDirection=FlowDirection.LeftToRight,WrapContents=true};
- void Btn(string txt,Action act){var b=new Button{Text=txt,Width=205,Height=48,BackColor=color,ForeColor=Color.White,FlatStyle=FlatStyle.Flat,Font=new Font("Malgun Gothic",11,FontStyle.Bold)};b.Click+=(_,_)=>act();actions.Controls.Add(b);}
- Btn("계정 저장 / 변경",()=>Save(n));Btn("관리자 자동 입력",()=>Fill(n));
- p.Controls.Add(actions);p.Controls.Add(info);p.Controls.Add(h);return p;
+ var p=new Panel{Dock=DockStyle.Fill,BackColor=n==1?Color.FromArgb(234,244,255):Color.FromArgb(231,249,239),Margin=new Padding(6),Padding=new Padding(12)};
+ var h=new Label{Text=label,ForeColor=color,Font=new Font("Malgun Gothic",15,FontStyle.Bold),Dock=DockStyle.Top,Height=36};
+ var fields=new TableLayoutPanel{Dock=DockStyle.Top,ColumnCount=2,RowCount=2,Height=80};
+ fields.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,90));fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));
+ var id=new TextBox{Dock=DockStyle.Fill,Font=new Font("Malgun Gothic",11)};
+ var pw=new TextBox{Dock=DockStyle.Fill,Font=new Font("Malgun Gothic",11),UseSystemPasswordChar=true};
+ var saved=Read(n);if(saved!=null){id.Text=saved.User;pw.Text=saved.Pass;}
+ fields.Controls.Add(new Label{Text="아이디",Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft},0,0);fields.Controls.Add(id,1,0);
+ fields.Controls.Add(new Label{Text="비밀번호",Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft},0,1);fields.Controls.Add(pw,1,1);
+ var actions=new FlowLayoutPanel{Dock=DockStyle.Fill,FlowDirection=FlowDirection.LeftToRight,WrapContents=false};
+ void SaveInline(){if(string.IsNullOrWhiteSpace(id.Text)||string.IsNullOrEmpty(pw.Text)){MessageBox.Show("아이디와 비밀번호를 입력해주세요.");return;}Directory.CreateDirectory(dir);File.WriteAllBytes(FileFor(n),ProtectedData.Protect(JsonSerializer.SerializeToUtf8Bytes(new Account(id.Text,pw.Text)),null,DataProtectionScope.CurrentUser));}
+ void Btn(string txt,Action act){var b=new Button{Text=txt,Width=145,Height=43,BackColor=color,ForeColor=Color.White,FlatStyle=FlatStyle.Flat,Font=new Font("Malgun Gothic",10,FontStyle.Bold)};b.Click+=(_,_)=>act();actions.Controls.Add(b);}
+ Btn("계정 저장",()=>{SaveInline();MessageBox.Show("계정 저장 요청을 처리했습니다.");});
+ Btn("관리자 자동 입력",()=>{SaveInline();Fill(n);});
+ p.Controls.Add(actions);p.Controls.Add(fields);p.Controls.Add(h);return p;
  }
  dashboard.Controls.Add(AccountPanel(1,"초기 관리자 계정",Color.FromArgb(20,106,196)),0,0);
  dashboard.Controls.Add(AccountPanel(2,"변경 관리자 계정",green),1,0);
@@ -35,7 +43,7 @@ internal sealed class RouterForm:Form{
  S("↻ 페이지 새로고침",()=>web.CoreWebView2?.Reload());
  S("🔑 계정 변경 5칸 입력",FillChange);
  dashboard.Controls.Add(settings,0,1);dashboard.SetColumnSpan(settings,2);
- var footer=new Label{Text="KT 공유기 매니저 PC  |  Ver. 2.0     kt service남부     충청본부 대전지점 대전지사 CS4팀(금산) 김홍식",Dock=DockStyle.Bottom,Height=42,TextAlign=ContentAlignment.MiddleCenter,Font=new Font("Malgun Gothic",10),ForeColor=Color.FromArgb(75,85,85)};
+ var footer=new Label{Text="KT 공유기 매니저 PC  |  Ver. 3.0     kt service남부     충청본부 대전지점 대전지사 CS4팀(금산) 김홍식",Dock=DockStyle.Bottom,Height=42,TextAlign=ContentAlignment.MiddleCenter,Font=new Font("Malgun Gothic",10),ForeColor=Color.FromArgb(75,85,85)};
  Controls.Add(web);Controls.Add(footer);Controls.Add(dashboard);Controls.Add(header);
  Shown+=async(_,_)=>{try{await web.EnsureCoreWebView2Async();web.CoreWebView2.Navigate(Router);}catch(Exception ex){MessageBox.Show("Microsoft Edge WebView2 Runtime이 필요합니다. "+ex.Message);}};
  }
