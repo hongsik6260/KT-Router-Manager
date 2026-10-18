@@ -32,12 +32,14 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().setStatusBarColor(Color.rgb(244,249,246));
+        getWindow().setFlags(0, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         ScrollView scroll = new ScrollView(this);
         homeScreen = scroll;
         root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(28,56,28,32);
+        root.setPadding(28,100,28,32);
         root.setBackgroundColor(Color.rgb(244,249,246));
         scroll.addView(root);
         setContentView(scroll);
@@ -49,7 +51,7 @@ public class MainActivity extends Activity {
         title.setTextColor(green);
         title.setTypeface(null,Typeface.BOLD);
         root.addView(title);
-        label("v7 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
+        label("v8 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
         addButton("1. KT AX 관리자 로그인", () -> openRouter("172.30.1.254",8899));
         addButton("2. 현재 공유기 자동 검색", () -> discover());
         ipInput = new EditText(this);
@@ -119,12 +121,20 @@ public class MainActivity extends Activity {
         page.setOrientation(LinearLayout.VERTICAL);
         page.setBackgroundColor(Color.WHITE);
         Button back = new Button(this);
-        back.setText("v7 · 앱 홈으로");
+        back.setText("v8 · 앱 내부 관리자 화면 · 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
         browser = new WebView(this);
-        browser.setWebViewClient(new WebViewClient());
+        browser.setWebViewClient(new WebViewClient() {
+            @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
+                if ("http".equals(request.getUrl().getScheme()) || "https".equals(request.getUrl().getScheme())) return false;
+                return true;
+            }
+            @Override public void onReceivedError(WebView view, android.webkit.WebResourceRequest request, android.webkit.WebResourceError error) {
+                if(request.isForMainFrame()) Toast.makeText(MainActivity.this, "관리자 페이지 접속 오류: "+error.getDescription(), Toast.LENGTH_LONG).show();
+            }
+        });
         browser.setWebChromeClient(new WebChromeClient());
         WebSettings settings = browser.getSettings();
         settings.setJavaScriptEnabled(true);
