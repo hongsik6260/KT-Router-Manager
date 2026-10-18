@@ -103,8 +103,50 @@ internal sealed class RouterForm:Form{
  footer{border-top:2px solid #e1e6e5;margin:17px 2px 0;padding:15px 6px;color:#424c52;display:flex;align-items:center;justify-content:space-between;gap:15px;font-size:14px}
  footer b{font-size:17px;color:#087c4f}.warning{font-size:12px;color:#7d8587;margin-top:10px}
  @media(max-width:1050px){.top{padding:18px}.brand{font-size:25px}.brand .kt{font-size:35px}.heading{font-size:25px}.cardtitle{font-size:20px}.field{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,1fr)}}
+
+ body{background:#fff;color:#101827}
+ .top{min-height:143px;margin:1px 1px 0;border-radius:21px;background:linear-gradient(175deg,#00aa56 0%,#008948 35%,#006632 100%);border:1px solid #3cde85;box-shadow:inset 0 2px 4px #ffffff35,0 5px 15px #076e3840;padding:22px 40px;gap:36px}
+ .brand{font-size:49px;letter-spacing:-2.5px;text-shadow:0 1px 2px #002b16}.brand .kt{font-size:74px;line-height:1}.brand .service{color:#fa173a}
+ .bar{height:88px}.heading{font-size:48px;letter-spacing:-1px;text-shadow:0 1px 3px #003e26}.sub{font-size:27px}
+ .topright{display:flex;gap:26px;align-items:center;color:white;font-size:38px}
+ main{padding:20px 22px 12px;max-width:none}
+ .accounts{gap:18px}
+ .card{border:1.5px solid #c3dffb;border-radius:22px;background:linear-gradient(135deg,#ffffff,#eff8ff);box-shadow:0 3px 9px #00000008}
+ .card.green{border-color:#b3ebcf;background:linear-gradient(135deg,#fff,#edfff5)}
+ .cardhead{background:linear-gradient(110deg,#edf8ff,#e5f2ff);padding:20px 23px;min-height:129px}
+ .green .cardhead{background:linear-gradient(110deg,#eafcf3,#def9eb)}
+ .avatar{font-size:0;position:relative;display:block;flex:none;width:78px;height:79px}
+ .avatar:before{content:'';position:absolute;left:23px;top:0;width:34px;height:34px;border-radius:50%;background:linear-gradient(#139cf4,#0060bf)}
+ .avatar:after{content:'';position:absolute;left:7px;bottom:1px;width:66px;height:38px;border-radius:36px 36px 3px 3px;background:linear-gradient(#129af1,#0061be)}
+ .green .avatar:before,.green .avatar:after{background:linear-gradient(#05ae66,#008d4b)}
+ .cardtitle{font-size:29px;color:#101426;letter-spacing:-.6px}
+ .hint{font-size:17px;color:#777}
+ .fields{padding:18px 22px 22px}
+ .field{grid-template-columns:112px 1fr;gap:12px;margin-bottom:16px;position:relative}
+ label{font-size:20px;color:#0c1421}
+ input{font-size:23px;min-height:67px;padding:14px 17px;border-radius:13px;background:linear-gradient(#fff,#fdfdfd);border:2px solid #cbd0d6;box-shadow:inset 0 2px 3px #0000000a}
+ .actions{margin-top:18px;gap:10px}
+ .action{min-height:78px;font-size:24px;border-radius:18px;background:linear-gradient(180deg,#209cff 0%,#0069d1 100%);border:1px solid #4eb4ff;box-shadow:0 5px 8px #005aa633,inset 0 2px 2px #ffffff65;text-shadow:0 1px 2px #002f72}
+ .green .action{background:linear-gradient(180deg,#00c96a,#007c42);border-color:#42db8c;box-shadow:0 5px 8px #00653230,inset 0 2px 2px #ffffff65}
+ .save{flex:0 0 72px;min-height:78px;font-size:15px;border-radius:13px;text-shadow:none;background:linear-gradient(#eaf5ff,#cfe8ff);color:#145c9b;box-shadow:0 2px 4px #00000016}
+ .green .save{background:linear-gradient(#e8fff2,#c5f0da);color:#0a7847}
+ .settings{margin-top:20px;border:2px solid #e1e5e7;border-radius:22px;padding:18px 23px 22px;box-shadow:0 2px 7px #0000000b}
+ .settings h2{font-size:29px;margin-bottom:19px}
+ .tiles{gap:15px}
+ .tile{min-height:115px;border-radius:17px;padding:15px 18px;background:linear-gradient(115deg,#eff9ff,#dff1ff);border-color:#c7e5ff;box-shadow:0 3px 8px #0000000a}
+ .tile:nth-child(2){background:linear-gradient(115deg,#effff7,#dcf8e9);border-color:#c2efd8}
+ .tile:nth-child(3){background:linear-gradient(115deg,#fffaf0,#fff0d0);border-color:#ffe4b2}
+ .tile:nth-child(4){background:linear-gradient(115deg,#fff7f7,#ffe1e6);border-color:#ffcbd5}
+ .tile .emoji{font-size:50px;line-height:1;color:#0875d1;min-width:56px;text-align:center}
+ .tile:nth-child(2) .emoji{color:#009a55}.tile:nth-child(3) .emoji{color:#ff8500}.tile:nth-child(4) .emoji{color:#ec2045}
+ .tile strong{font-size:22px;color:#111827}.tile small{font-size:15px;margin-top:6px}
+ footer{margin-top:18px;padding:18px 12px;border-top:2px solid #e0e5e5;font-size:16px}
+ footer b{font-size:20px}
+ .warning{font-size:11px;color:#a5acb2}
+ @media(max-width:1150px){.top{padding:17px;gap:18px;min-height:105px}.brand{font-size:27px}.brand .kt{font-size:43px}.heading{font-size:28px}.sub{font-size:17px}.bar{height:64px}.topright{font-size:25px;gap:12px}.cardhead{padding:12px;min-height:85px}.avatar{transform:scale(.65);margin:-12px}.cardtitle{font-size:21px}.hint{font-size:12px}.fields{padding:12px}.field{grid-template-columns:78px 1fr;gap:5px;margin-bottom:8px}label{font-size:14px}input{font-size:15px;min-height:42px;padding:7px}.action,.save{min-height:48px;font-size:15px}.save{flex-basis:60px;font-size:12px}.settings h2{font-size:19px}.tile{min-height:75px;padding:8px;gap:6px}.tile .emoji{font-size:28px;min-width:30px}.tile strong{font-size:14px}.tile small{font-size:10px}footer{font-size:11px}footer b{font-size:13px}}
+ @media(max-width:850px){.accounts{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,1fr)}}
  </style></head><body>
- <header class="top"><div class="brand"><span class="kt">kt</span> <span class="service">service 남부</span></div><div class="bar"></div><div><div class="heading">KT 공유기 매니저</div><div class="sub">GiGA WiFi home</div></div><div class="topright">⚙ ⓘ ⋮</div></header>
+ <header class="top"><div class="brand"><span class="kt">kt</span> <span class="service">service 남부</span></div><div class="bar"></div><div><div class="heading">KT 공유기 매니저</div><div class="sub">GiGA WiFi home</div></div><div class="topright"><span>⚙</span><span>ⓘ</span><span>⋮</span></div></header>
  <main><div class="accounts">
  <section class="card"><div class="cardhead"><div class="avatar">👤</div><div><div class="cardtitle">초기 관리자 계정</div><div class="hint">기본 관리자 계정 (공유기 초기 설정)</div></div></div>
  <div class="fields"><div class="field"><label for="u1">아이디</label><input id="u1" autocomplete="off"></div><div class="field"><label for="p1">비밀번호</label><input id="p1" type="password" autocomplete="off"></div>
@@ -113,12 +155,12 @@ internal sealed class RouterForm:Form{
  <div class="fields"><div class="field"><label for="u2">아이디</label><input id="u2" autocomplete="off"></div><div class="field"><label for="p2">비밀번호</label><input id="p2" type="password" autocomplete="off"></div>
  <div class="actions"><button class="action save" onclick="send('save',2)">저장</button><button class="action" onclick="send('fill',2)">🔑 변경 관리자 자동 입력</button></div></div></section></div>
  <section class="settings"><h2>🌐 공유기 접속 및 설정</h2><div class="tiles">
- <button class="tile" onclick="send('open')"><span class="emoji">🌐</span><span><strong>공유기 접속</strong><small>관리자 페이지 열기</small></span></button>
- <button class="tile" onclick="send('settings')"><span class="emoji">⚙️</span><span><strong>사용자 계정 설정</strong><small>로그인 후 설정 메뉴로 이동</small></span></button>
- <button class="tile" onclick="send('refresh')"><span class="emoji">🔄</span><span><strong>페이지 새로고침</strong><small>현재 첫 화면 다시 표시</small></span></button>
- <button class="tile" onclick="send('logout')"><span class="emoji">🚪</span><span><strong>로그아웃</strong><small>첫 화면으로 돌아가기</small></span></button>
+ <button class="tile" onclick="send('open')"><span class="emoji">◎</span><span><strong>공유기 접속</strong><small>관리자 페이지 열기</small></span></button>
+ <button class="tile" onclick="send('settings')"><span class="emoji">⚙</span><span><strong>사용자 계정 설정</strong><small>로그인 후 설정 메뉴로 이동</small></span></button>
+ <button class="tile" onclick="send('refresh')"><span class="emoji">⟳</span><span><strong>페이지 새로고침</strong><small>현재 첫 화면 다시 표시</small></span></button>
+ <button class="tile" onclick="send('logout')"><span class="emoji">⇥</span><span><strong>로그아웃</strong><small>첫 화면으로 돌아가기</small></span></button>
  </div></section>
- <footer><div>📶 <b>KT 공유기 매니저</b> &nbsp; | &nbsp; Ver. 6.0 <div class="hint">GiGA WiFi home</div></div><div><b>kt service남부</b> &nbsp; | &nbsp; 충청본부 대전지점 대전지사 CS4팀(금산) 김홍식</div></footer>
+ <footer><div>📶 <b>KT 공유기 매니저</b> &nbsp; | &nbsp; Ver. 7.0 <div class="hint">GiGA WiFi home</div></div><div><b>kt service남부</b> &nbsp; | &nbsp; 충청본부 대전지점 대전지사 CS4팀(금산) 김홍식</div></footer>
  <div class="warning">KT 공유기 Wi-Fi에 연결한 상태에서 사용하세요. 보안문자는 직접 입력해야 합니다. 계정 정보는 Windows 사용자 계정으로 암호화해 저장합니다.</div></main>
  <script>
  const saved=__DATA__;
