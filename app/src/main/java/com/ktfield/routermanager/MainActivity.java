@@ -69,7 +69,15 @@ public class MainActivity extends Activity {
         title.setTextColor(green);
         title.setTypeface(null,Typeface.BOLD);
         root.addView(title);
-        label("v15 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
+        TextView brand = new TextView(this);
+        brand.setText("kt service남부");
+        brand.setTextSize(24);
+        brand.setTypeface(null,Typeface.BOLD);
+        brand.setTextColor(Color.rgb(216,22,49));
+        brand.setPadding(0,6,0,10);
+        root.addView(brand);
+
+        label("v16 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
         addButton("1. KT AX 관리자 로그인", () -> openRouter("172.30.1.254",8899));
         LinearLayout accounts = new LinearLayout(this);
         accounts.setOrientation(LinearLayout.HORIZONTAL);
@@ -101,6 +109,7 @@ public class MainActivity extends Activity {
         output.setPadding(8,32,8,12);
         output.setTextIsSelectable(true);
         root.addView(output);
+        label("KT service남부  |  KT 공유기 매니저 v16\n충청본부 대전지점 대전지사 CS4팀(금산) 김홍식");
     }
     void label(String value) {
         TextView t = new TextView(this);
@@ -164,7 +173,7 @@ public class MainActivity extends Activity {
             return insets;
         });
         Button back = new Button(this);
-        back.setText("v15 · 앱 홈으로");
+        back.setText("v16 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
