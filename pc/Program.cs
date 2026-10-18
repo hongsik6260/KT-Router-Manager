@@ -4,6 +4,7 @@ internal static class Program{[STAThread]static void Main(){ApplicationConfigura
 internal sealed class RouterForm:Form{
  readonly WebView2 web=new(){Dock=DockStyle.Fill}; readonly string dir=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"KTRouterManagerPC");
  const string Router="http://172.30.1.254:8899/";
+ int pendingLoginAccount=0;
  record Account(string User,string Pass);
  public RouterForm(){
  Text="KT 공유기 매니저 PC";Width=1240;Height=940;MinimumSize=new Size(850,700);StartPosition=FormStartPosition.CenterScreen;
@@ -31,7 +32,7 @@ internal sealed class RouterForm:Form{
  void SaveInline(){if(string.IsNullOrWhiteSpace(id.Text)||string.IsNullOrEmpty(pw.Text)){MessageBox.Show("아이디와 비밀번호를 입력해주세요.");return;}Directory.CreateDirectory(dir);File.WriteAllBytes(FileFor(n),ProtectedData.Protect(JsonSerializer.SerializeToUtf8Bytes(new Account(id.Text,pw.Text)),null,DataProtectionScope.CurrentUser));}
  void Btn(string txt,Action act){var b=new Button{Text=txt,Width=145,Height=43,BackColor=color,ForeColor=Color.White,FlatStyle=FlatStyle.Flat,Font=new Font("Malgun Gothic",10,FontStyle.Bold)};b.Click+=(_,_)=>act();actions.Controls.Add(b);}
  Btn("계정 저장",()=>{SaveInline();MessageBox.Show("계정 저장 요청을 처리했습니다.");});
- Btn("관리자 자동 입력",()=>{SaveInline();Fill(n);});
+ Btn("관리자 자동 입력",()=>{SaveInline();pendingLoginAccount=n;if(web.CoreWebView2!=null)web.CoreWebView2.Navigate(Router);});
  p.Controls.Add(actions);p.Controls.Add(fields);p.Controls.Add(h);return p;
  }
  dashboard.Controls.Add(AccountPanel(1,"초기 관리자 계정",Color.FromArgb(20,106,196)),0,0);
@@ -41,11 +42,11 @@ internal sealed class RouterForm:Form{
  S("🌐 공유기 접속",()=>web.CoreWebView2?.Navigate(Router));
  S("⚙ 사용자 계정 설정",()=>MessageBox.Show("공유기 로그인 후 사용자 계정 설정 메뉴로 이동해주세요."));
  S("↻ 페이지 새로고침",()=>web.CoreWebView2?.Reload());
- S("🔑 계정 변경 5칸 입력",FillChange);
+
  dashboard.Controls.Add(settings,0,1);dashboard.SetColumnSpan(settings,2);
- var footer=new Label{Text="KT 공유기 매니저 PC  |  Ver. 3.0     kt service남부     충청본부 대전지점 대전지사 CS4팀(금산) 김홍식",Dock=DockStyle.Bottom,Height=42,TextAlign=ContentAlignment.MiddleCenter,Font=new Font("Malgun Gothic",10),ForeColor=Color.FromArgb(75,85,85)};
+ var footer=new Label{Text="KT 공유기 매니저 PC  |  Ver. 4.0     kt service남부     충청본부 대전지점 대전지사 CS4팀(금산) 김홍식",Dock=DockStyle.Bottom,Height=42,TextAlign=ContentAlignment.MiddleCenter,Font=new Font("Malgun Gothic",10),ForeColor=Color.FromArgb(75,85,85)};
  Controls.Add(web);Controls.Add(footer);Controls.Add(dashboard);Controls.Add(header);
- Shown+=async(_,_)=>{try{await web.EnsureCoreWebView2Async();web.CoreWebView2.Navigate(Router);}catch(Exception ex){MessageBox.Show("Microsoft Edge WebView2 Runtime이 필요합니다. "+ex.Message);}};
+ Shown+=async(_,_)=>{try{await web.EnsureCoreWebView2Async();web.CoreWebView2.NavigationCompleted+=async(sender,args)=>{if(pendingLoginAccount!=0){int account=pendingLoginAccount;pendingLoginAccount=0;await System.Threading.Tasks.Task.Delay(450);Fill(account);}};web.CoreWebView2.Navigate(Router);}catch(Exception ex){MessageBox.Show("Microsoft Edge WebView2 Runtime이 필요합니다. "+ex.Message);}};
  }
  string FileFor(int n)=>Path.Combine(dir,"account"+n+".dat");
  Account? Read(int n){try{return JsonSerializer.Deserialize<Account>(ProtectedData.Unprotect(File.ReadAllBytes(FileFor(n)),null,DataProtectionScope.CurrentUser));}catch{return null;}}
