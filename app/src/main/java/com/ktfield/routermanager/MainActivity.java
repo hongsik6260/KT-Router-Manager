@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
     ScrollView homeScreen;
     final String KEY_ALIAS = "kt_router_credentials_v9";
     int selectedAccount = 2;
+    boolean pendingLoginFill = false;
     final int green = Color.rgb(21, 105, 78);
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -98,7 +99,7 @@ public class MainActivity extends Activity {
         output.setTextSize(12);output.setTextColor(Color.DKGRAY);
         output.setPadding(dp(8),dp(18),dp(8),dp(12));root.addView(output);
         TextView footer=new TextView(this);
-        footer.setText("KT 공유기 매니저  |  Ver. 18\nkt service남부\n충청본부 대전지점 대전지사 CS4팀(금산) 김홍식");
+        footer.setText("KT 공유기 매니저  |  Ver. 19\nkt service남부\n충청본부 대전지점 대전지사 CS4팀(금산) 김홍식");
         footer.setTextSize(12);footer.setTextColor(Color.DKGRAY);
         footer.setPadding(dp(8),dp(12),dp(8),dp(22));root.addView(footer);
     }
@@ -136,8 +137,9 @@ public class MainActivity extends Activity {
             String u=id.getText().toString().trim(),p=pw.getText().toString();
             if(!u.isEmpty()&&!p.isEmpty())saveCredentials(n,u,p);
             selectedAccount=n;
+            pendingLoginFill=true;
             if(browser==null)showRouterWebView("http://172.30.1.254:8899/");
-            else fillCredentials();
+            else {browser.loadUrl("http://172.30.1.254:8899/");}
         });
         fill.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
         fill.setTextSize(12);card.addView(fill,new LinearLayout.LayoutParams(-1,dp(49)));
@@ -205,34 +207,10 @@ public class MainActivity extends Activity {
             return insets;
         });
         Button back = new Button(this);
-        back.setText("v18 · 앱 홈으로");
+        back.setText("v19 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
-        LinearLayout accountRow = new LinearLayout(this);
-        accountRow.setOrientation(LinearLayout.HORIZONTAL);
-        accountRow.setPadding(8,8,8,8);
-        Button initial = new Button(this);
-        initial.setText("초기 관리자");
-        initial.setAllCaps(false);
-        initial.setTextColor(Color.WHITE);
-        initial.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
-        initial.setOnClickListener(v -> { selectedAccount=1; fillCredentials(); });
-        Button changed = new Button(this);
-        changed.setText("변경 관리자");
-        changed.setAllCaps(false);
-        changed.setTextColor(Color.WHITE);
-        changed.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
-        changed.setOnClickListener(v -> { selectedAccount=2; fillCredentials(); });
-        LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0,(int)(64*getResources().getDisplayMetrics().density),1);
-        left.setMargins(0,0,4,0);
-        LinearLayout.LayoutParams right = new LinearLayout.LayoutParams(0,(int)(64*getResources().getDisplayMetrics().density),1);
-        right.setMargins(4,0,0,0);
-        accountRow.addView(initial,left);
-        accountRow.addView(changed,right);
-        page.addView(accountRow,new LinearLayout.LayoutParams(-1,-2));
-        Button changeFill = makeGreenButton("계정 변경 화면 5개 항목 자동 입력", () -> fillChangeForm());
-        page.addView(changeFill,new LinearLayout.LayoutParams(-1,dp(58)));
         browser = new WebView(this);
         browser.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
@@ -240,7 +218,10 @@ public class MainActivity extends Activity {
                 return true;
             }
             @Override public void onPageFinished(WebView view,String url) {
-                // User selects which account to fill; never auto-fill the wrong profile.
+                if(pendingLoginFill) {
+                    pendingLoginFill=false;
+                    view.postDelayed(()->fillCredentials(),500);
+                }
             }
             @Override public void onReceivedError(WebView view, android.webkit.WebResourceRequest request, android.webkit.WebResourceError error) {
                 if(request.isForMainFrame()) Toast.makeText(MainActivity.this, "관리자 페이지 접속 오류: "+error.getDescription(), Toast.LENGTH_LONG).show();
