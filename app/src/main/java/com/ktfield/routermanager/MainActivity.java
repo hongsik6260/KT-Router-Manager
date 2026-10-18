@@ -44,14 +44,12 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().setStatusBarColor(Color.rgb(244,249,246));
-        getWindow().setFlags(0, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         ScrollView scroll = new ScrollView(this);
         homeScreen = scroll;
         root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(28,120,28,32);
+        root.setPadding(28,24,28,32);
         root.setBackgroundColor(Color.rgb(244,249,246));
         scroll.addView(root);
         setContentView(scroll);
@@ -63,7 +61,7 @@ public class MainActivity extends Activity {
         title.setTextColor(green);
         title.setTypeface(null,Typeface.BOLD);
         root.addView(title);
-        label("v9 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
+        label("v10 · GiGA WiFi home ax · KM15-103H\n관리자 로그인 및 Wi-Fi 설정 도우미");
         addButton("1. KT AX 관리자 로그인", () -> openRouter("172.30.1.254",8899));
         addButton("관리자 계정 저장 / 변경", () -> credentialsDialog());
         addButton("저장된 관리자 계정 삭제", () -> clearCredentials());
@@ -135,7 +133,7 @@ public class MainActivity extends Activity {
         page.setOrientation(LinearLayout.VERTICAL);
         page.setBackgroundColor(Color.WHITE);
         Button back = new Button(this);
-        back.setText("v9 · 앱 홈으로");
+        back.setText("v10 · 앱 홈으로");
         back.setAllCaps(false);
         back.setOnClickListener(v -> closeRouterWebView());
         page.addView(back, new LinearLayout.LayoutParams(-1, (int)(52*getResources().getDisplayMetrics().density)));
@@ -143,7 +141,11 @@ public class MainActivity extends Activity {
         fill.setText("저장된 아이디 / 비밀번호 입력");
         fill.setAllCaps(false);
         fill.setOnClickListener(v -> fillCredentials());
-        page.addView(fill);
+        fill.setTextColor(Color.WHITE);
+        fill.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
+        LinearLayout.LayoutParams fillParams = new LinearLayout.LayoutParams(-1,(int)(64*getResources().getDisplayMetrics().density));
+        fillParams.setMargins(12,8,12,12);
+        page.addView(fill,fillParams);
         browser = new WebView(this);
         browser.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
